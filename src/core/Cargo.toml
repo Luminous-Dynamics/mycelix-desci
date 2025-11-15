@@ -38,6 +38,11 @@ tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 proptest = { workspace = true }
 tokio-test = "0.4"
 tempfile = "3.8"
+criterion = { version = "0.5", features = ["html_reports", "async_tokio"] }
+
+[[bench]]
+name = "core_benchmarks"
+harness = false
 
 [features]
 default = []
