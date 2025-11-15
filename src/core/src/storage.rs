@@ -22,6 +22,7 @@ pub trait StorageBackend: Send + Sync {
 }
 
 /// In-memory storage for testing
+#[derive(Clone)]
 pub struct MemoryStorage {
     claims: std::sync::Arc<tokio::sync::RwLock<std::collections::HashMap<String, DesciClaim>>>,
 }

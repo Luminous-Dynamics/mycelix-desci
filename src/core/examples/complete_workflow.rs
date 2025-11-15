@@ -53,7 +53,7 @@ async fn main() -> Result<()> {
     ";
 
     // Hash the dataset
-    let dataset_hash = hash::hash_bytes(dataset_description.as_bytes())?;
+    let dataset_hash = hash::hash_bytes(dataset_description.as_bytes());
     let dataset_hash_str = hash::hash_to_string(&dataset_hash);
 
     println!("   Dataset: NAD+ Longevity Study");
@@ -131,13 +131,13 @@ async fn main() -> Result<()> {
     println!("\n💾 Step 5: Storing claim...");
 
     storage.store(&claim).await?;
-    query_engine.add_claim(&claim).await?;
+    query_engine.add_claim(&claim).await;
 
     println!("   ✓ Stored in DHT/IPFS (simulated)");
     println!("   ✓ Indexed for queries");
 
     // Verify storage
-    let retrieved = storage.get(&claim.id).await?.expect("Claim not found");
+    let retrieved = storage.get(&claim.id.to_string()).await?.expect("Claim not found");
     assert_eq!(retrieved.id, claim.id);
     println!("   ✓ Storage verified");
 
@@ -151,22 +151,18 @@ async fn main() -> Result<()> {
         verifier: "peer_bob@mit.edu".to_string(),
         signature: vec![1, 2, 3, 4, 5], // In production: actual cryptographic signature
         timestamp: chrono::Utc::now(),
-        metadata: serde_json::json!({
-            "verification_type": "data_quality",
-            "reproducibility_confirmed": true,
-            "comments": "Verified dataset integrity and methodology"
-        }),
+        notes: Some("Verified dataset integrity and methodology (data_quality)".to_string()),
     };
 
     claim.add_verification(verification1);
-    trust_manager.update_score("peer_bob@mit.edu", 0.1, 0.8)?;
+    trust_manager.update_score("peer_bob@mit.edu", true, 0.8)?;
 
     println!("   ✓ Verification 1: peer_bob@mit.edu");
     println!("   Tier upgraded: E0 → {:?}", claim.epistemic_tier);
 
     // Update storage
-    storage.update(&claim).await?;
-    query_engine.update_claim(&claim).await?;
+    storage.store(&claim).await?;
+    query_engine.add_claim(&claim).await;
 
     // ========================================================================
     // STEP 7: Additional Verifications (E2 → E3 → E4)
@@ -185,14 +181,11 @@ async fn main() -> Result<()> {
             verifier: verifier.to_string(),
             signature: vec![1, 2, 3],
             timestamp: chrono::Utc::now(),
-            metadata: serde_json::json!({
-                "verification_type": verification_type,
-                "confidence": 0.9
-            }),
+            notes: Some(format!("Verification: {}", verification_type)),
         };
 
         claim.add_verification(verification);
-        trust_manager.update_score(verifier, 0.1, 0.85)?;
+        trust_manager.update_score(verifier, true, 0.85)?;
 
         println!("   ✓ Verification {}: {} ({})",
             claim.verifications.len(), verifier, verification_type);
@@ -200,8 +193,8 @@ async fn main() -> Result<()> {
     }
 
     // Final update
-    storage.update(&claim).await?;
-    query_engine.update_claim(&claim).await?;
+    storage.store(&claim).await?;
+    query_engine.add_claim(&claim).await;
 
     println!("\n   🎉 Final tier: {:?} - {}",
         claim.epistemic_tier,
@@ -218,7 +211,7 @@ async fn main() -> Result<()> {
         .with_category("longevity".to_string());
     let results = query_engine.query(&filter).await?;
     println!("   Found: {} claim(s)", results.claims.len());
-    println!("   Query time: {:.2}ms", results.query_time_ms);
+    println!("   Query time: {:.2}ms", results.execution_time_ms);
 
     // Query 2: High-quality claims (E3+)
     println!("\n   Query 2: High-quality verified claims (E3+)");
@@ -245,7 +238,7 @@ async fn main() -> Result<()> {
         .with_category("longevity".to_string())
         .with_keyword("NAD+".to_string())
         .with_min_tier(EpistemicTier::E4)
-        .with_sort(SortBy::Timestamp, SortOrder::Descending);
+        .with_sort(SortBy::CreatedAt, SortOrder::Descending);
     let results = query_engine.query(&filter).await?;
     println!("   Found: {} claim(s)", results.claims.len());
 
@@ -264,8 +257,8 @@ async fn main() -> Result<()> {
 
     println!("\n   Verifier Trust Scores:");
     for peer in all_peers {
-        let score = trust_manager.get_score(peer)?;
-        let trusted = trust_manager.is_trusted(peer, 0.6)?;
+        let score = trust_manager.get_score(peer);
+        let trusted = trust_manager.is_trusted(peer);
         println!("   {} {}: {:.3} (confidence: {:.3}) {}",
             if trusted { "✓" } else { "✗" },
             peer,
@@ -302,7 +295,7 @@ async fn main() -> Result<()> {
 
     for (description, category, keywords, tier) in additional_claims {
         let content = ClaimContent {
-            dataset_hash: hash::hash_to_string(&hash::hash_bytes(description.as_bytes())?),
+            dataset_hash: hash::hash_to_string(&hash::hash_bytes(description.as_bytes())),
             description: description.to_string(),
             category: category.to_string(),
             keywords: keywords.iter().map(|s| s.to_string()).collect(),
@@ -313,7 +306,7 @@ async fn main() -> Result<()> {
 
         let claim = DesciClaim::new(tier, content, "researcher_collective".to_string());
         storage.store(&claim).await?;
-        query_engine.add_claim(&claim).await?;
+        query_engine.add_claim(&claim).await;
 
         println!("   ✓ Added: {}", string::truncate(description, 60));
     }
@@ -342,7 +335,7 @@ async fn main() -> Result<()> {
         println!("     {:?}: {} ({})", tier, count, tier.description());
     }
 
-    println!("\n   Average Query Time: {:.2}ms", all_results.query_time_ms);
+    println!("\n   Average Query Time: {:.2}ms", all_results.execution_time_ms);
 
     // ========================================================================
     // Summary
