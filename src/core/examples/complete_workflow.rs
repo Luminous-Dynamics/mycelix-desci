@@ -18,12 +18,12 @@ use mycelix_desci_core::{
     utils::{string, time, validation},
     Result,
 };
-use std::path::Path;
+use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     println!("🧬 Mycelix-DeSci Complete Workflow Example\n");
-    println!("=" .repeat(60));
+    println!("{}", "=".repeat(60));
 
     // ========================================================================
     // STEP 1: Initialize Components
@@ -31,7 +31,8 @@ async fn main() -> Result<()> {
     println!("\n📦 Step 1: Initializing system components...");
 
     let storage = MemoryStorage::new();
-    let mut query_engine = QueryEngine::new(storage.clone());
+    let storage_arc: Arc<dyn StorageBackend> = Arc::new(storage.clone());
+    let query_engine = QueryEngine::new(storage_arc);
     let mut trust_manager = TrustManager::new();
 
     println!("   ✓ Storage backend initialized");
@@ -54,7 +55,7 @@ async fn main() -> Result<()> {
 
     // Hash the dataset
     let dataset_hash = hash::hash_bytes(dataset_description.as_bytes());
-    let dataset_hash_str = hash::hash_to_string(&dataset_hash);
+    let dataset_hash_str = dataset_hash.to_string();
 
     println!("   Dataset: NAD+ Longevity Study");
     println!("   Hash (BLAKE3): {}", string::truncate(&dataset_hash_str, 20));
@@ -137,7 +138,7 @@ async fn main() -> Result<()> {
     println!("   ✓ Indexed for queries");
 
     // Verify storage
-    let retrieved = storage.get(&claim.id.to_string()).await?.expect("Claim not found");
+    let retrieved = storage.retrieve(&claim.id.to_string()).await?;
     assert_eq!(retrieved.id, claim.id);
     println!("   ✓ Storage verified");
 
@@ -295,7 +296,7 @@ async fn main() -> Result<()> {
 
     for (description, category, keywords, tier) in additional_claims {
         let content = ClaimContent {
-            dataset_hash: hash::hash_to_string(&hash::hash_bytes(description.as_bytes())),
+            dataset_hash: hash::hash_bytes(description.as_bytes()).to_string(),
             description: description.to_string(),
             category: category.to_string(),
             keywords: keywords.iter().map(|s| s.to_string()).collect(),
@@ -340,7 +341,7 @@ async fn main() -> Result<()> {
     // ========================================================================
     // Summary
     // ========================================================================
-    println!("\n" + &"=".repeat(60));
+    println!("\n{}", "=".repeat(60));
     println!("✅ Workflow Complete!\n");
     println!("Summary of Demonstrated Features:");
     println!("  • Dataset hashing and integrity verification");
@@ -354,7 +355,7 @@ async fn main() -> Result<()> {
     println!("  • Knowledge graph discovery");
     println!("  • Real-time performance metrics");
     println!("\n🚀 Mycelix-DeSci is production-ready!");
-    println!("=" .repeat(60) + "\n");
+    println!("{}\n", "=".repeat(60));
 
     Ok(())
 }
