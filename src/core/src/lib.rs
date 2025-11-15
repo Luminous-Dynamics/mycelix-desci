@@ -14,10 +14,12 @@ pub mod error;
 pub mod config;
 pub mod hash;
 pub mod logging;
+pub mod query;
 
 pub use claims::{DesciClaim, EpistemicTier, Provenance};
 pub use error::{Error, Result};
 pub use config::Config;
+pub use query::{QueryEngine, QueryFilter};
 
 /// Version of the Mycelix-DeSci protocol
 pub const PROTOCOL_VERSION: &str = "0.1.0";
