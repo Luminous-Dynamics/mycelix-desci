@@ -73,15 +73,27 @@ npm install
 ### Basic Usage
 
 ```bash
-# Upload and verify a dataset
-mycelix-desci upload --file data.csv --tier E3 --provenance "PubChem ID:123"
+# Initialize configuration
+mycelix-desci init
 
-# Query the knowledge graph
-mycelix-desci query --search "longevity research" --min-tier E2
+# Upload a dataset
+mycelix-desci upload dataset.csv \
+  --tier E2 \
+  --category genomics \
+  --description "CRISPR gene editing results" \
+  --provenance "Lab Notebook:2024-001"
 
-# Start federated learning node
-mycelix-desci fl-node --config config.toml
+# Query claims
+mycelix-desci query --category longevity --min-tier E3
+
+# Verify a claim
+mycelix-desci verify <CLAIM-ID> --file dataset.csv
+
+# Calculate file hash
+mycelix-desci hash dataset.csv
 ```
+
+See [CLI Usage Guide](docs/guides/cli-usage.md) for complete documentation.
 
 ## Project Structure
 
