@@ -1,7 +1,6 @@
 [workspace]
 members = [
     "src/core",
-    "src/contracts",
 ]
 resolver = "2"
 
@@ -30,8 +29,8 @@ rand = "0.8"
 
 # Holochain DHT (for P2P data sharing)
 # Note: These versions are placeholders - adjust based on actual Mycelix core deps
-holochain = { version = "0.2", optional = true }
-holo_hash = { version = "0.2", optional = true }
+# holochain = { version = "0.2" }
+# holo_hash = { version = "0.2" }
 
 # Error handling
 thiserror = "1.0"

@@ -15,6 +15,7 @@ pub mod config;
 pub mod hash;
 pub mod logging;
 pub mod query;
+pub mod utils;
 
 pub use claims::{DesciClaim, EpistemicTier, Provenance};
 pub use error::{Error, Result};

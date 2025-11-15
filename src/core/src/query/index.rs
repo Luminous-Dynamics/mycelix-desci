@@ -164,7 +164,7 @@ impl ClaimIndex {
     }
 
     /// Check if index is empty
-    pub fn is_empty(&self) -> usize {
+    pub fn is_empty(&self) -> bool {
         self.all_claims.is_empty()
     }
 

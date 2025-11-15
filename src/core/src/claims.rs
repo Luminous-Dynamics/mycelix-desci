@@ -15,7 +15,7 @@ use uuid::Uuid;
 /// - E2: Multi-source verification
 /// - E3: Reproducible with documented methodology
 /// - E4: Peer-reviewed and independently reproduced
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum EpistemicTier {
     E0 = 0,

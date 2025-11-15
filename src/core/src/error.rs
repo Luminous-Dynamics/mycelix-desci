@@ -8,13 +8,25 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// Error types for Mycelix-DeSci
 #[derive(Error, Debug)]
 pub enum Error {
-    /// IO error
+    /// IO error (from std::io::Error)
     #[error("IO error: {0}")]
     Io(#[from] std::io::Error),
 
-    /// Serialization error
+    /// IO error with custom message
+    #[error("IO error: {0}")]
+    IoError(String),
+
+    /// Serialization error (from serde_json::Error)
     #[error("Serialization error: {0}")]
     Serialization(#[from] serde_json::Error),
+
+    /// Serialization error with custom message
+    #[error("Serialization error: {0}")]
+    SerializationError(String),
+
+    /// Validation error
+    #[error("Validation error: {0}")]
+    Validation(String),
 
     /// Invalid epistemic tier
     #[error("Invalid epistemic tier: {0}")]
