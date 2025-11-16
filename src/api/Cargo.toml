@@ -7,6 +7,10 @@ authors.workspace = true
 repository.workspace = true
 description = "REST API server for Mycelix-DeSci"
 
+[lib]
+name = "mycelix_desci_api"
+path = "src/lib.rs"
+
 [[bin]]
 name = "mycelix-api"
 path = "src/main.rs"
@@ -45,3 +49,6 @@ mycelix-desci-core = { path = "../core" }
 
 [dev-dependencies]
 tokio-test = "0.4"
+reqwest = { version = "0.11", features = ["json"] }
+uuid = { workspace = true }
+rand = "0.8"
