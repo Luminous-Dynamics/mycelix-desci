@@ -2,6 +2,7 @@
 members = [
     "src/core",
     "src/api",
+    "src/cli",
 ]
 resolver = "2"
 
