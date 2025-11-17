@@ -11,7 +11,7 @@ use std::sync::Arc;
 use tracing::{info, instrument};
 use uuid::Uuid;
 
-use crate::{error::{ApiError, Result}, models::*, state::AppState};
+use crate::{error::{ApiError, Result}, metrics, models::*, state::AppState};
 
 /// Create a new claim
 #[utoipa::path(
@@ -50,6 +50,10 @@ pub async fn create_claim(
 
     // Add to query index
     state.query_engine.write().await.add_claim(&claim).await;
+
+    // Track metrics
+    metrics::track_claim_creation(&format!("{:?}", claim.epistemic_tier));
+    metrics::track_storage_operation("store", true);
 
     info!(claim_id = %claim.id, "Claim created successfully");
 

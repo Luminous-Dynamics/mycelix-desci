@@ -44,6 +44,13 @@ anyhow = { workspace = true }
 uuid = { workspace = true }
 chrono = { workspace = true }
 
+# Metrics
+prometheus = "0.13"
+lazy_static = "1.4"
+
+# Rate limiting (disabled for now - needs proper implementation)
+# tower-governor = "0.3"
+
 # Project dependencies
 mycelix-desci-core = { path = "../core" }
 

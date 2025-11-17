@@ -6,7 +6,7 @@ use crate::{
     claims::DesciClaim,
     query::{ClaimIndex, QueryFilter, SortBy, SortOrder},
     storage::StorageBackend,
-    Error, Result,
+    Result,
 };
 use std::sync::Arc;
 use tokio::sync::RwLock;

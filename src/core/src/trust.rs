@@ -2,7 +2,7 @@
 //!
 //! Trust scoring and reputation management for DeSci participants
 
-use crate::{Error, Result};
+use crate::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

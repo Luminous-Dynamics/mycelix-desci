@@ -6,6 +6,7 @@
 use axum::{
     extract::DefaultBodyLimit,
     http::{header, HeaderValue, Method},
+    response::IntoResponse,
     Router,
 };
 use std::net::SocketAddr;
@@ -23,11 +24,14 @@ use utoipa_swagger_ui::SwaggerUi;
 
 mod error;
 mod handlers;
+mod metrics;
+mod middleware;
 mod models;
 mod routes;
 mod state;
 
 use error::Result;
+use middleware::MetricsMiddleware;
 use state::AppState;
 
 /// API version
@@ -111,6 +115,8 @@ fn create_app(state: AppState) -> Router {
         .merge(SwaggerUi::new("/docs").url("/api-docs/openapi.json", openapi))
         // Health check at root
         .route("/health", axum::routing::get(handlers::system::health_check))
+        // Metrics endpoint for Prometheus
+        .route("/metrics", axum::routing::get(metrics_handler))
         // Application state
         .with_state(Arc::new(state))
         // Middleware stack (applied in reverse order)
@@ -122,6 +128,8 @@ fn create_app(state: AppState) -> Router {
                 .layer(TimeoutLayer::new(std::time::Duration::from_secs(30)))
                 .layer(DefaultBodyLimit::max(10 * 1024 * 1024)), // 10MB max
         )
+        // Add metrics middleware
+        .layer(axum::middleware::from_fn(MetricsMiddleware::track))
 }
 
 /// Configure CORS middleware
@@ -130,4 +138,21 @@ fn configure_cors() -> CorsLayer {
         .allow_origin("*".parse::<HeaderValue>().unwrap())
         .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
         .allow_headers([header::CONTENT_TYPE, header::AUTHORIZATION])
+}
+
+/// Metrics handler for Prometheus
+async fn metrics_handler() -> impl axum::response::IntoResponse {
+    match metrics::encode_metrics() {
+        Ok(metrics) => (
+            axum::http::StatusCode::OK,
+            [("content-type", "text/plain; version=0.0.4")],
+            metrics,
+        )
+            .into_response(),
+        Err(e) => (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to encode metrics: {}", e),
+        )
+            .into_response(),
+    }
 }
