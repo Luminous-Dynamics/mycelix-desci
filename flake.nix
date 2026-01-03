@@ -16,7 +16,8 @@
         };
 
         # Pinned Rust toolchain for maximum reproducibility
-        rustToolchain = pkgs.rust-bin.stable."1.75.0".default.override {
+        # Updated to 1.83.0 for edition2024 support (required by base64ct)
+        rustToolchain = pkgs.rust-bin.stable."1.83.0".default.override {
           extensions = [ "rust-src" "rust-analyzer" ];
         };
 

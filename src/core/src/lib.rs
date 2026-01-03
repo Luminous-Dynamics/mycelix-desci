@@ -17,7 +17,7 @@ pub mod logging;
 pub mod query;
 pub mod utils;
 
-pub use claims::{DesciClaim, EpistemicTier, Provenance};
+pub use claims::{DesciClaim, EpistemicPosition, EpistemicTier, Provenance};
 pub use error::{Error, Result};
 pub use config::Config;
 pub use query::{QueryEngine, QueryFilter};
