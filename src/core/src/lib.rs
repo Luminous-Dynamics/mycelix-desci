@@ -1,9 +1,11 @@
 //! Mycelix-DeSci Core
 //!
 //! Core functionality for Mycelix-DeSci including:
-//! - Epistemic claim management (E0-E4 tiers)
+//! - Epistemic claim management with Charter v2.0 LEM Cube
+//! - Multi-layer epistemic fingerprinting (LEM, Type, Quality, Network)
 //! - Proof of Gradient Quality (PoGQ) for federated learning
 //! - MATL (Mycelix Adaptive Trust Layer) integration
+//! - Claim relationships and knowledge graph support
 //! - Data verification and provenance tracking
 
 pub mod claims;
@@ -17,7 +19,25 @@ pub mod logging;
 pub mod query;
 pub mod utils;
 
-pub use claims::{DesciClaim, EpistemicPosition, EpistemicTier, Provenance};
+// Core claim types
+pub use claims::{DesciClaim, EpistemicPosition, EpistemicTier, Provenance, ClaimContent, Verification};
+
+// Layer 1: LEM Cube (Charter v2.0)
+pub use claims::{LEMCube, EmpiricalAxis, NormativeAxis, MaterialityAxis};
+
+// Layer 3: Quality Metrics
+pub use claims::QualityMetrics;
+
+// Layer 4: Network Position
+pub use claims::{NetworkPosition, ClaimRelation, ClaimRelationType};
+
+// MATL Integration
+pub use claims::MATLTrust;
+
+// Unified Fingerprint
+pub use claims::EpistemicFingerprint;
+
+// Error handling and configuration
 pub use error::{Error, Result};
 pub use config::Config;
 pub use query::{QueryEngine, QueryFilter};

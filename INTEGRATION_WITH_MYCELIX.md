@@ -1,111 +1,167 @@
-# Mycelix DeSci - Ecosystem Integration Guide
+# Mycelix DeSci - Charter-Aligned Epistemic Integration
 
-**Version**: 0.1.0
+**Version**: 0.2.0
 **Date**: January 3, 2026
-**Status**: MVP Complete + E-N-M Integration
+**Status**: MVP Complete + Full Charter v2.0 Alignment
 
 ---
 
 ## Overview
 
-Mycelix DeSci is now integrated into the Mycelix ecosystem with a dual epistemic classification system:
+Mycelix DeSci now implements the **complete Epistemic Charter v2.0** framework through a multi-layer Epistemic Tensor architecture:
 
-1. **E0-E4 Tiers** (Social Verification): How many independent verifications does this claim have?
-2. **E-N-M Cube** (Type Classification): What kind of claim is this?
-
-This dual system provides both **trust measurement** (E0-E4) and **claim categorization** (E-N-M).
+| Layer | Name | Purpose | Source |
+|-------|------|---------|--------|
+| **1** | LEM Cube | Governance classification | Epistemic Charter v2.0 |
+| **2** | Type Position | Claim nature (E-N-M) | DeSci Extension |
+| **3** | Quality Metrics | Scientific rigor | Research Standards |
+| **4** | Network Position | Claim relationships | Constitution Schema |
+| **+** | MATL Trust | Reputation-weighted verification | Economic Charter |
 
 ---
 
-## The Dual Epistemic System
+## Layer 1: LEM Cube (Official Charter v2.0)
 
-### E0-E4 Verification Tiers
+The Layered Epistemic Model from the official Mycelix Epistemic Charter:
 
-| Tier | Verifications Required | Description |
-|------|------------------------|-------------|
-| E0 | 0 | Unverified claim |
-| E1 | 1 | Single-source verification |
-| E2 | 2-4 | Multi-source verification |
-| E3 | 5-9 | Reproducible with documented methodology |
-| E4 | 10+ | Peer-reviewed and independently reproduced |
+### E-Axis: Empirical Verifiability (E0-E4)
+*How do we verify this claim?*
 
-Claims **automatically upgrade** as verifications accumulate.
+| Level | Name | Description |
+|-------|------|-------------|
+| E0 | Null | Unverifiable belief, subjective opinion |
+| E1 | Testimonial | Personal attestation, witness account |
+| E2 | Privately Verifiable | Expert verification (audit guild) |
+| E3 | Cryptographically Proven | ZKP, merkle proofs, on-chain |
+| E4 | Publicly Reproducible | Open data/code, anyone can verify |
 
-### E-N-M Classification Cube
+### N-Axis: Normative Authority (N0-N3)
+*Who agrees this is binding?*
 
-Every claim is positioned in a 3D epistemic space:
+| Level | Name | Description |
+|-------|------|-------------|
+| N0 | Personal | Self only, individual preference |
+| N1 | Communal | Local DAO or working group consensus |
+| N2 | Network | Global network consensus |
+| N3 | Axiomatic | Constitutional or mathematical axiom |
 
-```
-         M (Mythic)
-          │
-          │    ┌─────────────┐
-          │   /│            /│
-          │  / │           / │
-          │ /  │          /  │
-          │┌───┼─────────┐   │
-          │|   │         │   │
-          │|   └─────────┼───┘
-          │|  /          │  /
-          │| /           │ /
-          │|/            │/
-          └┴─────────────┴────── E (Empirical)
-         /
-        /
-       N (Normative)
-```
+### M-Axis: Materiality (M0-M3)
+*How long does this matter?*
 
-**Dimensions**:
-- **Empirical (E)**: How verifiable through observation? (0.0-1.0)
-- **Normative (N)**: How aligned with ethical frameworks? (0.0-1.0)
-- **Mythic (M)**: What narrative/meaning significance? (0.0-1.0)
+| Level | Name | Description |
+|-------|------|-------------|
+| M0 | Ephemeral | Discard immediately, real-time only |
+| M1 | Temporal | Prune after state change, session-bound |
+| M2 | Persistent | Archive after time, historical record |
+| M3 | Foundational | Preserve forever, constitutional |
 
-**Examples**:
+### Common LEM Patterns
+
 | Claim Type | E | N | M | Example |
 |------------|---|---|---|---------|
-| Scientific fact | 0.9 | 0.1 | 0.1 | "Water boils at 100°C at sea level" |
-| Moral principle | 0.2 | 0.9 | 0.5 | "All humans have inherent dignity" |
-| Origin story | 0.1 | 0.4 | 0.9 | "The universe began with the Big Bang" |
-| Historical event | 0.8 | 0.5 | 0.8 | "The moon landing occurred in 1969" |
+| Scientific Publication | E4 | N2 | M2 | Peer-reviewed paper |
+| Governance Decision | E0 | N2 | M3 | Passed MIP |
+| Personal Opinion | E0 | N0 | M0 | Chat message |
+| Cryptographic Proof | E3 | N3 | M3 | ZK verification |
+| Expert Review | E2 | N1 | M2 | Audit guild assessment |
 
 ---
 
-## Integration with Mycelix hApps
+## Layer 2: Claim Type Position (DeSci Extension)
 
-### With mycelix-knowledge
+Three-dimensional classification of claim **nature**:
 
-The Knowledge hApp and DeSci share the E-N-M framework:
+- **Empirical (E)**: How observation-based? (0.0-1.0)
+- **Normative (N)**: How value-laden? (0.0-1.0)
+- **Mythic (M)**: How meaning-laden? (0.0-1.0)
+
+| Claim Type | Empirical | Normative | Mythic | Example |
+|------------|-----------|-----------|--------|---------|
+| Scientific fact | 0.9 | 0.1 | 0.1 | "Water boils at 100°C" |
+| Moral principle | 0.2 | 0.9 | 0.5 | "All humans have dignity" |
+| Origin story | 0.1 | 0.4 | 0.9 | "The Big Bang" |
+| Historical event | 0.8 | 0.5 | 0.8 | "Moon landing 1969" |
+
+---
+
+## Layer 3: Quality Metrics
+
+Scientific rigor assessment:
 
 ```rust
-// DeSci claim with E-N-M position
-use mycelix_desci_core::{DesciClaim, EpistemicPosition, ClaimContent};
-
-let claim = DesciClaim::with_position(
-    EpistemicTier::E0,
-    EpistemicPosition::scientific(0.95),  // High empirical
-    content,
-    "researcher@uni.edu".to_string(),
-);
-
-// Can be synced to mycelix-knowledge graph
+pub struct QualityMetrics {
+    pub methodology: f64,      // Study design quality
+    pub data_quality: f64,     // Completeness, accuracy
+    pub statistical_rigor: f64,// Appropriate methods
+    pub preregistration: f64,  // Hypothesis preregistered?
+    pub open_science: f64,     // Data/code availability
+}
 ```
 
-### With mycelix-media
+---
 
-DeSci claims can be fact-checked through Media's epistemic verification:
+## Layer 4: Network Position (Claim Relationships)
+
+From Constitution Schema v2.0:
 
 ```rust
-// Scientific claim for fact-checking
-let claim = DesciClaim::scientific(content, creator);
-// Submit to Media hApp's factcheck zome for verification
+pub enum ClaimRelationType {
+    Supports,     // Evidence supporting another claim
+    Refutes,      // Evidence against another claim
+    Supercedes,   // Replaces/updates a previous claim
+    Clarifies,    // Explains another claim
+    Restricts,    // Limits scope of another claim
+    Extends,      // Expands scope of another claim
+    Cites,        // References as a source
+    DependsOn,    // Requires another claim to be true
+    Predicts,     // Makes prediction about another
+    Conflicts,    // Direct conflict with another
+}
 ```
 
-### With mycelix-edunet
+---
 
-Research discoveries can be credentialed through EduNet:
+## MATL Integration (Economic Charter)
+
+Reputation-weighted verification:
 
 ```rust
-// Research achievement becomes W3C Verifiable Credential
-// DeSci E4 claim -> EduNet credential_zome -> W3C VC
+pub struct MATLTrust {
+    pub pogq_score: f64,           // Proof-of-Genuine-Query
+    pub tcdm_score: f64,           // Trust Composition & Decay
+    pub entropy_score: f64,        // Diversity of verifiers
+    pub weighted_verifications: f64,// Reputation-weighted count
+    pub raw_verifications: usize,   // Raw verification count
+}
+```
+
+**Composite Trust Formula**:
+```
+Trust = 0.40 * PoGQ + 0.35 * TCDM + 0.25 * Entropy
+```
+
+---
+
+## Epistemic Fingerprint (Unified View)
+
+The `EpistemicFingerprint` combines all layers:
+
+```rust
+pub struct EpistemicFingerprint {
+    pub lem_cube: LEMCube,           // Layer 1
+    pub type_position: EpistemicPosition, // Layer 2
+    pub quality: QualityMetrics,     // Layer 3
+    pub network: NetworkPosition,     // Layer 4
+    pub matl_trust: MATLTrust,       // MATL integration
+    pub legacy_tier: EpistemicTier,  // E0-E4 compatibility
+}
+```
+
+**Confidence Score**:
+```
+Confidence = 0.25 * LEM_weight + 0.10 * Type_weight
+           + 0.25 * Quality_score + 0.20 * Network_support
+           + 0.20 * MATL_trust
 ```
 
 ---
@@ -115,51 +171,106 @@ Research discoveries can be credentialed through EduNet:
 ### Creating Claims
 
 ```rust
-use mycelix_desci_core::{
-    DesciClaim, EpistemicTier, EpistemicPosition, ClaimContent
-};
+use mycelix_desci_core::*;
 
-// Scientific claim (high empirical)
+// Scientific claim with full fingerprint
 let claim = DesciClaim::scientific(content, "researcher@uni.edu".to_string());
+// Automatically: E4 LEM, high empirical position, high quality
 
-// Ethical claim (high normative)
-let claim = DesciClaim::ethical(content, "ethicist@uni.edu".to_string());
+// Cryptographic proof claim
+let claim = DesciClaim::cryptographic_proof(content, "prover@chain.eth".to_string());
+// Automatically: E3 LEM (crypto), axiomatic normative, perfect quality
 
-// Narrative claim (high mythic)
-let claim = DesciClaim::narrative(content, "historian@uni.edu".to_string());
-
-// Custom position
-let position = EpistemicPosition::new(0.7, 0.6, 0.3);
-let claim = DesciClaim::with_position(
-    EpistemicTier::E1,
-    position,
-    content,
-    "creator@uni.edu".to_string(),
-);
+// Custom fingerprint
+let fingerprint = EpistemicFingerprint {
+    lem_cube: LEMCube::new(
+        EmpiricalAxis::E2PrivatelyVerifiable,
+        NormativeAxis::N1Communal,
+        MaterialityAxis::M2Persistent,
+    ),
+    type_position: EpistemicPosition::new(0.7, 0.4, 0.3),
+    quality: QualityMetrics::high_quality(),
+    network: NetworkPosition::default(),
+    matl_trust: MATLTrust::default(),
+    legacy_tier: EpistemicTier::E2,
+};
+let claim = DesciClaim::with_fingerprint(fingerprint, content, creator);
 ```
 
-### Querying by E-N-M Position
+### Adding Relationships
 
 ```rust
-// Find all highly empirical claims
-let scientific_claims = query_engine
-    .query(QueryFilter::new()
-        .with_min_empirical(0.8))
-    .await?;
+// Support relationship
+claim.add_relation(other_claim_id, ClaimRelationType::Supports, 0.9);
 
-// Find balanced claims
-let balanced = claims.iter()
-    .filter(|c| c.epistemic_position.is_balanced())
-    .collect();
+// Refutation
+claim.add_relation(disputed_claim_id, ClaimRelationType::Refutes, 0.8);
+
+// Citation
+claim.add_relation(source_claim_id, ClaimRelationType::Cites, 1.0);
+```
+
+### MATL-Weighted Verification
+
+```rust
+// Standard verification (weight = 1.0)
+claim.add_verification(verification);
+
+// High-reputation verifier (weight = 2.5)
+claim.add_verification_with_reputation(verification, 2.5);
+
+// This affects tier progression via MATL
+assert_eq!(claim.fingerprint.matl_trust.weighted_verifications, 2.5);
+```
+
+### Querying Confidence
+
+```rust
+// Get unified confidence score (0.0-1.0)
+let confidence = claim.confidence();
+
+// Get human-readable summary
+let summary = claim.epistemic_summary();
+// "LEM(E4, N2, M2) | Type:empirical | Quality:88% | Support:50% | MATL:0% | Confidence:45%"
 ```
 
 ---
 
-## Workspace Location
+## Integration with Mycelix Ecosystem
 
+### With mycelix-knowledge
+```rust
+// DeSci claims sync to knowledge graph with full LEM classification
 ```
-mycelix-workspace/happs/desci -> /srv/luminous-dynamics/mycelix-desci/
+
+### With mycelix-media
+```rust
+// Media fact-checking uses LEM E-axis for verification type
 ```
+
+### With mycelix-governance
+```rust
+// Governance MIPs use LEM (E0, N2, M3) pattern
+```
+
+### With mycelix-edunet
+```rust
+// Research credentials reference verified E4 claims
+```
+
+---
+
+## Test Coverage
+
+**36 tests passing** covering:
+- LEM Cube construction and trust weights
+- Quality metrics computation
+- Network position tracking
+- MATL trust scoring and tier derivation
+- Epistemic fingerprint confidence
+- Full claim integration
+- Relationship management
+- Cryptographic proof claims
 
 ---
 
@@ -170,16 +281,10 @@ cd mycelix-desci
 
 # Using Nix (recommended)
 nix develop
-cargo test --lib
+cargo test --lib claims::tests::
 
-# Run specific tests
-cargo test claims::tests::
-
-# Run benchmarks
-cargo bench
-
-# Run CLI
-cargo run --bin mycelix -- --help
+# Run all tests
+cargo test
 
 # Run API server
 cargo run --bin mycelix-api
@@ -187,20 +292,20 @@ cargo run --bin mycelix-api
 
 ---
 
-## Future: Holochain Integration
+## Version History
 
-The DeSci core is currently standalone Rust for maximum performance. Future plans include:
+- **v0.2.0** (2026-01-03): Full Charter v2.0 alignment
+  - Added LEM Cube (E/N/M axes)
+  - Added Quality Metrics
+  - Added Network Position & relationships
+  - Added MATL Trust integration
+  - Added Epistemic Fingerprint
+  - 36 tests passing
 
-1. **Storage Backend**: Replace MemoryStorage with Holochain DHT
-2. **Identity**: Integrate DID:mycelix for researcher identity
-3. **Trust**: Connect to MATL for reputation-weighted verification
-4. **Bridge**: Enable cross-hApp claim referencing
-
----
-
-## Contributing
-
-See `CONTRIBUTING.md` for guidelines.
+- **v0.1.0** (2026-01-03): Initial MVP
+  - Basic E0-E4 tiers
+  - Simple E-N-M type position
+  - 12 tests passing
 
 ---
 
