@@ -1,14 +1,16 @@
 # Mycelix DeSci - Charter-Aligned Epistemic Integration
 
-**Version**: 0.2.0
+**Version**: 0.3.0
 **Date**: January 3, 2026
-**Status**: MVP Complete + Full Charter v2.0 Alignment
+**Status**: Complete Epistemic Framework with Advanced Features
 
 ---
 
 ## Overview
 
-Mycelix DeSci now implements the **complete Epistemic Charter v2.0** framework through a multi-layer Epistemic Tensor architecture:
+Mycelix DeSci implements the **complete Epistemic Charter v2.0** framework through a multi-layer Epistemic Tensor architecture, plus advanced epistemic systems:
+
+### Core Epistemic Layers
 
 | Layer | Name | Purpose | Source |
 |-------|------|---------|--------|
@@ -17,6 +19,18 @@ Mycelix DeSci now implements the **complete Epistemic Charter v2.0** framework t
 | **3** | Quality Metrics | Scientific rigor | Research Standards |
 | **4** | Network Position | Claim relationships | Constitution Schema |
 | **+** | MATL Trust | Reputation-weighted verification | Economic Charter |
+
+### Advanced Epistemic Systems (v0.3.0)
+
+| System | Purpose | Module |
+|--------|---------|--------|
+| **Evolution** | Claim versioning & ancestry | `evolution.rs` |
+| **Dispute Resolution** | Challenge & arbitration | `dispute.rs` |
+| **Cartel Detection** | Anti-collusion for MATL | `cartel.rs` |
+| **Reproducibility** | Replication tracking | `reproducibility.rs` |
+| **Prediction Markets** | Epistemic forecasting | `prediction.rs` |
+| **Semantic Similarity** | Duplicate detection | `semantic.rs` |
+| **Decay Mechanics** | Time-based trust decay | `decay.rs` |
 
 ---
 
@@ -260,9 +274,159 @@ let summary = claim.epistemic_summary();
 
 ---
 
+## Advanced Epistemic Systems
+
+### Claim Evolution & Versioning
+
+From Constitution Schema v2.0 - tracks claim ancestry and modifications:
+
+```rust
+pub enum EvolutionType {
+    Genesis,      // Original claim
+    Amendment,    // Minor update preserving core findings
+    Correction,   // Error correction
+    Retraction,   // Full withdrawal
+    Supersession, // Replaced by newer research
+    Extension,    // Extended with new findings
+    Consolidation,// Merged from multiple claims
+}
+
+pub struct ClaimEvolution {
+    pub version: u32,
+    pub parent_claim_id: Option<Uuid>,
+    pub evolution_type: EvolutionType,
+    pub changelog: String,
+    pub evolution_chain: Vec<Uuid>, // Full ancestry
+}
+```
+
+### Dispute Resolution System
+
+From Epistemic Charter §5 - challenge claims and reach resolution:
+
+```rust
+pub enum ChallengeType {
+    Factual,           // Data/conclusions are wrong
+    Methodological,    // Flawed study design
+    Ethical,           // Research ethics violations
+    Reproducibility,   // Cannot replicate results
+    Attribution,       // Plagiarism issues
+    ConflictOfInterest,// Undisclosed conflicts
+    DataIntegrity,     // Fabrication/falsification
+    OverClaim,         // Conclusions exceed evidence
+}
+
+pub enum ResolutionOutcome {
+    ChallengeUpheld,    // Claim is invalid
+    PartiallyUpheld,    // Minor issues found
+    ChallengeRejected,  // Claim stands
+    Inconclusive,       // Insufficient evidence
+    MutualResolution,   // Parties reached agreement
+}
+```
+
+### Cartel Detection for MATL
+
+Anti-collusion algorithms to prevent gaming of reputation:
+
+```rust
+pub enum CartelPattern {
+    MutualVerification,   // A verifies B, B verifies A
+    SynchronizedTiming,   // Coordinated timing
+    ExclusiveClique,      // Closed group only verifies each other
+    CoordinatedVoting,    // Identical vote patterns
+    VelocityAnomaly,      // Abnormal verification frequency
+}
+
+// Automatic trust penalty based on detection
+pub fn calculate_trust_penalty(result: &CartelDetectionResult) -> f64;
+```
+
+### Reproducibility Tracking
+
+Track replication attempts and outcomes:
+
+```rust
+pub enum ReplicationOutcome {
+    FullReplication,     // Same results within error margin
+    PartialReplication,  // Some findings confirmed
+    FailureToReplicate,  // Contradictory results
+    Inconclusive,        // Unable to determine
+}
+
+pub struct ReproducibilityStats {
+    pub total_attempts: usize,
+    pub full_replications: usize,
+    pub reproducibility_score: f64,  // 0.0-1.0
+    pub score_confidence: f64,        // Based on sample size
+}
+```
+
+### Prediction Markets
+
+Futarchy-style markets for epistemic forecasting:
+
+```rust
+pub struct PredictionMarket {
+    pub claim_id: Uuid,
+    pub current_probability: f64,    // Market price
+    pub total_stake: f64,            // Total reputation staked
+    pub state: MarketState,          // Open/Locked/Resolved
+}
+
+// Brier scoring rule for settlements
+// accuracy = 1 - (prediction - outcome)²
+```
+
+### Semantic Similarity Engine
+
+Detect duplicate and related claims:
+
+```rust
+pub enum SimilarityRelationship {
+    Duplicate,       // >= 0.95 similarity
+    NearDuplicate,   // >= 0.85
+    HighlyRelated,   // >= 0.70
+    Related,         // >= 0.50
+    WeaklyRelated,   // >= 0.30
+    Unrelated,       // < 0.30
+}
+
+pub struct DuplicateCheckResult {
+    pub has_duplicate: bool,
+    pub recommendation: DuplicateRecommendation,
+}
+```
+
+### Decay Mechanics
+
+Time-based decay for trust and verification weights:
+
+```rust
+pub enum DecayFunction {
+    Linear,       // weight = 1 - (age / max_age)
+    Exponential,  // weight = exp(-λ * age)
+    Logarithmic,  // weight = 1 / (1 + ln(1 + age/scale))
+    Step,         // Full weight until threshold
+    None,         // No decay (foundational claims)
+}
+
+// Presets based on LEM M-axis (Materiality)
+pub mod presets {
+    fn ephemeral() -> DecayConfig;    // M0: 7-day half-life
+    fn temporal() -> DecayConfig;     // M1: 90-day half-life
+    fn persistent() -> DecayConfig;   // M2: 365-day half-life
+    fn foundational() -> DecayConfig; // M3: No decay
+}
+```
+
+---
+
 ## Test Coverage
 
-**36 tests passing** covering:
+**217 tests passing** covering:
+
+### Core Epistemic (36 tests)
 - LEM Cube construction and trust weights
 - Quality metrics computation
 - Network position tracking
@@ -271,6 +435,21 @@ let summary = claim.epistemic_summary();
 - Full claim integration
 - Relationship management
 - Cryptographic proof claims
+
+### Advanced Systems (42 tests)
+- Claim evolution and versioning (5 tests)
+- Dispute resolution lifecycle (5 tests)
+- Cartel pattern detection (5 tests)
+- Reproducibility tracking (5 tests)
+- Prediction market mechanics (5 tests)
+- Semantic similarity algorithms (7 tests)
+- Decay function calculations (10 tests)
+
+### Supporting Infrastructure (139 tests)
+- Query engine and filters
+- Storage operations
+- Validation utilities
+- Error handling
 
 ---
 
@@ -281,10 +460,16 @@ cd mycelix-desci
 
 # Using Nix (recommended)
 nix develop
-cargo test --lib claims::tests::
+cargo test --lib
 
-# Run all tests
-cargo test
+# Run specific module tests
+cargo test --lib evolution::tests
+cargo test --lib dispute::tests
+cargo test --lib cartel::tests
+cargo test --lib reproducibility::tests
+cargo test --lib prediction::tests
+cargo test --lib semantic::tests
+cargo test --lib decay::tests
 
 # Run API server
 cargo run --bin mycelix-api
@@ -293,6 +478,16 @@ cargo run --bin mycelix-api
 ---
 
 ## Version History
+
+- **v0.3.0** (2026-01-03): Advanced Epistemic Systems
+  - Added Claim Evolution & Versioning (Constitution Schema v2.0)
+  - Added Dispute Resolution (Epistemic Charter §5)
+  - Added Cartel Detection for MATL anti-collusion
+  - Added Reproducibility Tracking for scientific claims
+  - Added Prediction Markets (futarchy-style)
+  - Added Semantic Similarity Engine (duplicate detection)
+  - Added Decay Mechanics (time-based trust decay)
+  - 217 tests passing
 
 - **v0.2.0** (2026-01-03): Full Charter v2.0 alignment
   - Added LEM Cube (E/N/M axes)
