@@ -14,6 +14,13 @@
 //! - Prediction markets for epistemic outcomes
 //! - Semantic similarity detection
 //! - Time-based decay mechanics
+//! - Cross-claim inference engine (transitive support, contradiction detection)
+//! - Citation graph analysis (PageRank importance scoring)
+//! - Expertise domains and weighted verification
+//! - Temporal consensus tracking (paradigm shift detection)
+//! - Meta-claims and systematic reviews (PRISMA, GRADE)
+//! - Bayesian belief networks for probabilistic reasoning
+//! - Zero-knowledge verification proofs
 
 pub mod claims;
 pub mod pogq;
@@ -26,7 +33,7 @@ pub mod logging;
 pub mod query;
 pub mod utils;
 
-// New epistemic modules
+// Epistemic modules (Phase 1 - v0.3.0)
 pub mod evolution;
 pub mod dispute;
 pub mod cartel;
@@ -34,6 +41,15 @@ pub mod reproducibility;
 pub mod prediction;
 pub mod semantic;
 pub mod decay;
+
+// Advanced epistemic modules (Phase 2 - v0.4.0)
+pub mod inference;
+pub mod citation;
+pub mod expertise;
+pub mod consensus;
+pub mod meta;
+pub mod bayesian;
+pub mod zkproof;
 
 // Core claim types
 pub use claims::{DesciClaim, EpistemicPosition, EpistemicTier, Provenance, ClaimContent, Verification};
@@ -93,13 +109,57 @@ pub use decay::{
     DecayingAccumulator,
 };
 
+// Cross-Claim Inference Engine
+pub use inference::{
+    ClaimGraph, ClaimNode, ClaimEdge, InferenceEngine, InferenceConfig,
+    InferredRelation, InferenceRule, ContradictionReport, ContradictionType,
+    SuggestedRelation,
+};
+
+// Citation Graph Analysis
+pub use citation::{
+    CitationGraph, Citation, CitationType, CitationMetrics, CitationAnalyzer,
+    PageRankConfig,
+};
+
+// Expertise Domains & Weighted Verification
+pub use expertise::{
+    ExpertiseDomain, ExpertiseLevel, ExpertiseProfile, DomainTaxonomy,
+    ExpertiseVerifier, ExpertiseWeightConfig, WeightedVerificationResult,
+};
+
+// Temporal Consensus Tracking
+pub use consensus::{
+    ConsensusTracker, ConsensusTrackerConfig, ConsensusHistory, ConsensusSnapshot,
+    ConsensusState, ConsensusTrend, ParadigmShift, ShiftType,
+};
+
+// Meta-Claims & Systematic Reviews
+pub use meta::{
+    MetaClaim, MetaClaimType, MetaSynthesizer, SourceQualityAssessment,
+    RiskOfBias, PrismaFlow, SynthesisResult, SynthesisMethod, EffectDirection,
+    HeterogeneityAssessment, HeterogeneityLevel, GradeQuality,
+};
+
+// Bayesian Belief Networks
+pub use bayesian::{
+    BeliefNetwork, BeliefNode, ConditionalProbabilityTable, CPTEntry,
+    BayesianInference,
+};
+
+// Zero-Knowledge Verification Proofs
+pub use zkproof::{
+    ZKProver, ZKVerifier, ZKStatement, ZKProof, ZKProofType, ZKProofError,
+    Witness,
+};
+
 // Error handling and configuration
 pub use error::{Error, Result};
 pub use config::Config;
 pub use query::{QueryEngine, QueryFilter};
 
 /// Version of the Mycelix-DeSci protocol
-pub const PROTOCOL_VERSION: &str = "0.2.0";
+pub const PROTOCOL_VERSION: &str = "0.4.0";
 
 /// Default Byzantine fault tolerance threshold for PoGQ (45%)
 pub const DEFAULT_BFT_THRESHOLD: f64 = 0.45;
@@ -110,6 +170,6 @@ mod tests {
 
     #[test]
     fn test_protocol_version() {
-        assert_eq!(PROTOCOL_VERSION, "0.2.0");
+        assert_eq!(PROTOCOL_VERSION, "0.4.0");
     }
 }

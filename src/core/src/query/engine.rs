@@ -10,6 +10,7 @@ use crate::{
 };
 use std::sync::Arc;
 use tokio::sync::RwLock;
+use tracing::{debug, warn, instrument};
 use uuid::Uuid;
 
 /// Query result
@@ -26,6 +27,9 @@ pub struct QueryResult {
 
     /// Execution time in milliseconds
     pub execution_time_ms: u64,
+
+    /// Number of retrieval errors encountered (claims that could not be loaded)
+    pub retrieval_errors: usize,
 }
 
 /// Query engine
@@ -69,14 +73,18 @@ impl QueryEngine {
     }
 
     /// Execute a query
+    #[instrument(skip(self, filter), fields(candidate_count, matched_count, errors))]
     pub async fn query(&self, filter: &QueryFilter) -> Result<QueryResult> {
         let start = std::time::Instant::now();
 
         // Get candidate claim IDs from index
         let candidate_ids = self.get_candidate_ids(filter).await?;
+        debug!(candidate_count = candidate_ids.len(), "Retrieved candidate IDs from index");
 
         // Retrieve claims from storage
         let mut claims = Vec::new();
+        let mut retrieval_errors = 0usize;
+
         for id in &candidate_ids {
             match self.storage.retrieve(&id.to_string()).await {
                 Ok(claim) => {
@@ -84,8 +92,29 @@ impl QueryEngine {
                         claims.push(claim);
                     }
                 }
-                Err(_) => continue,  // Skip claims that can't be retrieved
+                Err(e) => {
+                    // Log the error with context instead of silently continuing
+                    retrieval_errors += 1;
+                    warn!(
+                        claim_id = %id,
+                        error = %e,
+                        error_count = retrieval_errors,
+                        "Failed to retrieve claim from storage - claim may be corrupted or deleted"
+                    );
+                    // Continue processing other claims but track the error
+                    continue;
+                }
             }
+        }
+
+        // Log summary if there were errors
+        if retrieval_errors > 0 {
+            warn!(
+                total_candidates = candidate_ids.len(),
+                retrieval_errors = retrieval_errors,
+                successful_retrievals = claims.len(),
+                "Query completed with retrieval errors - some indexed claims could not be loaded"
+            );
         }
 
         let total_count = claims.len();
@@ -108,11 +137,20 @@ impl QueryEngine {
 
         let execution_time_ms = start.elapsed().as_millis() as u64;
 
+        debug!(
+            matched_count = total_count,
+            returned_count = paginated_claims.len(),
+            retrieval_errors = retrieval_errors,
+            execution_time_ms = execution_time_ms,
+            "Query execution completed"
+        );
+
         Ok(QueryResult {
             claims: paginated_claims,
             total_count,
             page: offset / limit.max(1),
             execution_time_ms,
+            retrieval_errors,
         })
     }
 
@@ -289,6 +327,7 @@ mod tests {
 
         assert_eq!(result.claims.len(), 1);
         assert_eq!(result.total_count, 1);
+        assert_eq!(result.retrieval_errors, 0);
     }
 
     #[tokio::test]

@@ -12,7 +12,11 @@ pub fn init(config: &LoggingConfig) {
 
     let filter = EnvFilter::from_default_env()
         .add_directive(level.into())
-        .add_directive("mycelix_desci_core=debug".parse().unwrap());
+        .add_directive(
+            "mycelix_desci_core=debug"
+                .parse()
+                .expect("Static directive 'mycelix_desci_core=debug' must be valid")
+        );
 
     let fmt_layer = match config.format.as_str() {
         "json" => fmt::layer().json().boxed(),

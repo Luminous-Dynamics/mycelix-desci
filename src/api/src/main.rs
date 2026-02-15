@@ -135,7 +135,10 @@ fn create_app(state: AppState) -> Router {
 /// Configure CORS middleware
 fn configure_cors() -> CorsLayer {
     CorsLayer::new()
-        .allow_origin("*".parse::<HeaderValue>().unwrap())
+        .allow_origin(
+            "*".parse::<HeaderValue>()
+                .expect("Static CORS origin '*' must be valid")
+        )
         .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
         .allow_headers([header::CONTENT_TYPE, header::AUTHORIZATION])
 }

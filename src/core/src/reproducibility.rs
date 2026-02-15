@@ -383,7 +383,8 @@ impl ReproducibilityRegistry {
             stats.recalculate(&attempts);
             self.stats_cache.insert(claim_id, stats);
         }
-        self.stats_cache.get(&claim_id).unwrap()
+        // Safe: we just inserted if not present, so get() will always succeed
+        self.stats_cache.get(&claim_id).expect("Stats must exist after insertion")
     }
 
     /// Invalidate cached stats for a claim

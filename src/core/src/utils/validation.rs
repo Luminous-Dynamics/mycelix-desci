@@ -217,7 +217,10 @@ pub fn validate_keywords(keywords: &[String]) -> Result<()> {
 
 /// Validate hash format (hexadecimal string)
 pub fn validate_hash_format(hash: &str) -> Result<()> {
-    let regex = HASH_REGEX.get_or_init(|| Regex::new(r"^[a-fA-F0-9]+$").unwrap());
+    let regex = HASH_REGEX.get_or_init(|| {
+        Regex::new(r"^[a-fA-F0-9]+$")
+            .expect("Static regex pattern '^[a-fA-F0-9]+$' must be valid")
+    });
 
     if hash.is_empty() {
         return Err(Error::Validation("Hash cannot be empty".to_string()));
@@ -265,7 +268,8 @@ pub fn validate_url(url: &str) -> Result<()> {
     }
 
     let regex = URL_REGEX.get_or_init(|| {
-        Regex::new(r"^(https?|ipfs|ipns)://[^\s]+$").unwrap()
+        Regex::new(r"^(https?|ipfs|ipns)://[^\s]+$")
+            .expect("Static URL regex pattern must be valid")
     });
 
     if !regex.is_match(url) {
@@ -298,7 +302,8 @@ pub fn validate_license(license: &str) -> Result<()> {
 /// Check if a string is a valid SPDX license identifier
 pub fn is_valid_spdx_license(license: &str) -> bool {
     let regex = SPDX_LICENSE_REGEX.get_or_init(|| {
-        Regex::new(r"^[A-Za-z0-9\.\-]+(\+)?$").unwrap()
+        Regex::new(r"^[A-Za-z0-9\.\-]+(\+)?$")
+            .expect("Static SPDX license regex pattern must be valid")
     });
 
     // Common SPDX licenses (subset for validation)

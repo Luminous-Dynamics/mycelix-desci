@@ -230,7 +230,8 @@ pub fn build_merkle_tree(mut hashes: Vec<Hash>) -> Result<MerkleNode> {
         nodes = next_level;
     }
 
-    Ok(nodes.into_iter().next().unwrap())
+    // Safe: we checked for empty list at start, and loop maintains at least one node
+    nodes.into_iter().next().ok_or_else(|| Error::Generic("Merkle tree construction failed unexpectedly".to_string()))
 }
 
 #[cfg(test)]
